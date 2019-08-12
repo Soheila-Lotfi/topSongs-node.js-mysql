@@ -39,17 +39,46 @@ function runSearch() {
           artistSearch();
           break;
         case "Find all artists who appear more than once":
-          artistSearch();
+          multiSearch();
           break;
         case "Find data within a specific range":
-          artistSearch();
+          rangeSearch();
           break;
         case "Find data within a specific range":
-          artistSearch();
+          songSearch();
           break;
         case "exit":
           connection.end();
           break;
       }
     });
+}
+
+function artistSearch() {
+  inquirer
+    .prompt({
+      name: "artist",
+      type: "input",
+      message: "What artist would you like to search for?"
+    })
+    .then(function(answers) {
+      connection.query(
+        "SELECT position, song, year From top1000 WHERE ?",
+        { artist: answers.artist },
+        function(err, res) {
+          if (err) throw err;
+          for (i = 0; i < res.length; i++) {
+            console.log(
+              "position :" +
+                res[i].position +
+                "|| song :" +
+                res[i].song +
+                "|| yesr :" +
+                res[i].year
+            );
+          }
+        }
+      );
+    });
+  runSearch();
 }
