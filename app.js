@@ -1,5 +1,5 @@
 var mysql = require("mysql");
-var inquirer = require(inquirer);
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -25,7 +25,7 @@ function runSearch() {
     .prompt({
       name: "action",
       type: "list",
-      choice: [
+      choices: [
         "Find songs by artist",
         "Find all artists who appear more than once",
         "Find data within a specific range",
@@ -44,7 +44,7 @@ function runSearch() {
         case "Find data within a specific range":
           rangeSearch();
           break;
-        case "Find data within a specific range":
+        case "Search for a specific song":
           songSearch();
           break;
         case "exit":
@@ -77,10 +77,10 @@ function artistSearch() {
                 res[i].year
             );
           }
+          runSearch();
         }
       );
     });
-  runSearch();
 }
 
 function multiSearch() {
@@ -91,13 +91,14 @@ function multiSearch() {
       for (i = 0; i < res.length; i++) {
         console.log(res[i].artist);
       }
+      runSearch();
     }
   );
 }
 
 function rangeSearch() {
   inquirer
-    .prompt(
+    .prompt([
       {
         name: "start",
         type: "input",
@@ -105,9 +106,8 @@ function rangeSearch() {
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
-          } else {
-            return false;
           }
+          return false;
         }
       },
       {
@@ -117,14 +117,13 @@ function rangeSearch() {
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
-          } else {
-            return false;
           }
+          return false;
         }
       }
-    )
+    ])
     .then(function(answers) {
-      connect.query(
+      connection.query(
         "SELECT position, artist, song, year FROM top1000 WHERE position BETWEEN ? AND ?",
         [answers.start, answers.end],
         function(err, res) {
@@ -156,7 +155,7 @@ function songSearch() {
     .then(function(answer) {
       console.log(answer.song);
       connection.query(
-        "SELECT * FROM top5000 WHERE ?",
+        "SELECT * FROM top1000 WHERE ?",
         { song: answer.song },
         function(err, res) {
           if (err) throw err;
