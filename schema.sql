@@ -3,7 +3,7 @@ CREATE database top_songsDB;
 
 USE top_songsDB;
 
-CREATE TABLE top5000 (
+CREATE TABLE top1000 (
   position INT NOT NULL,
   artist VARCHAR(100) NULL,
   song VARCHAR(100) NULL,
