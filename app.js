@@ -82,3 +82,15 @@ function artistSearch() {
     });
   runSearch();
 }
+
+function multiSearch() {
+  connection.query(
+    "SELECT artist From top1000 GROUP BY artist HAVING COUNT(artist)>1",
+    function(err, res) {
+      if (err) throw err;
+      for (i = 0; i < res.length; i++) {
+        console.log(res[i].artist);
+      }
+    }
+  );
+}
