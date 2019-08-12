@@ -19,3 +19,37 @@ connection.connect(function(err) {
   if (err) throw err;
   runSearch();
 });
+
+function runSearch() {
+  inquirer
+    .prompt({
+      name: "action",
+      type: "list",
+      choice: [
+        "Find songs by artist",
+        "Find all artists who appear more than once",
+        "Find data within a specific range",
+        "Search for a specific song",
+        "exit"
+      ]
+    })
+    .then(function(answers) {
+      switch (answers.action) {
+        case "Find songs by artist":
+          artistSearch();
+          break;
+        case "Find all artists who appear more than once":
+          artistSearch();
+          break;
+        case "Find data within a specific range":
+          artistSearch();
+          break;
+        case "Find data within a specific range":
+          artistSearch();
+          break;
+        case "exit":
+          connection.end();
+          break;
+      }
+    });
+}
