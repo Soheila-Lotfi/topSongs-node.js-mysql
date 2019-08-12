@@ -94,3 +94,55 @@ function multiSearch() {
     }
   );
 }
+
+function rangeSearch() {
+  inquirer
+    .prompt(
+      {
+        name: "start",
+        type: "input",
+        message: "Enter starting position: ",
+        validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      },
+      {
+        name: "end",
+        type: "input",
+        message: "Enter ending position: ",
+        validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    )
+    .then(function(answers) {
+      connect.query(
+        "SELECT position, artist, song, year FROM top1000 WHERE position BETWEEN ? AND ?",
+        [answers.start, answers.end],
+        function(err, res) {
+          if (err) throw err;
+          for (var i = 0; i < res.length; i++) {
+            console.log(
+              "Position: " +
+                res[i].position +
+                " || Song: " +
+                res[i].song +
+                " || Artist: " +
+                res[i].artist +
+                " || Year: " +
+                res[i].year
+            );
+          }
+          runSearch();
+        }
+      );
+    });
+}
